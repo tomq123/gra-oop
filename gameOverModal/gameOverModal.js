@@ -18,12 +18,10 @@ export class GameOverModal {
   }
   close() {
     this.hide();
-    console.log("close modal");
     this.gameOverModalCallback("close");
   }
   retry() {
     this.hide();
-    console.log("retry modal");
     this.gameOverModalCallback("retry");
   }
   addListeners() {

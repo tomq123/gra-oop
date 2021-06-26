@@ -26,7 +26,6 @@ export class Enemies {
         Math.random() * (this.scene.width / maxIndex) +
         i * (this.scene.width / maxIndex);
     }
-    console.log("i, maxIndex", i, maxIndex);
     const enemy = new Enemy(
       this.scene.ctx,
       (eventName, payload) => this.enemyCallback(eventName, payload),
@@ -34,7 +33,6 @@ export class Enemies {
       -100,
       80
     );
-    console.log("this.scene.ctx", this.scene.ctx);
     this.enemies.push(enemy);
     enemy.enemiesIndex =
       this.enemies.length + Date.now() + Math.round(1000 * Math.random());

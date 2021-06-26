@@ -85,11 +85,6 @@ export class Game {
           projectile.y
         );
         if (isColision) {
-          console.log(
-            "this.projectiles",
-            this.projectiles,
-            projectile.projectilesIndex
-          );
           this.scene.removeDrawEntity(projectile.sceneIndex);
           const index = this.projectiles.findIndex(
             (el) => el.projectilesIndex === projectile.projectilesIndex
@@ -98,7 +93,9 @@ export class Game {
             this.projectiles.splice(index, 1);
           }
           this.score += gameConfig.enmey.destroyScore;
-          console.log("this.score", this.score);
+          this.gameCallback("setScore", {
+            score: this.score,
+          });
         }
       });
     });
@@ -156,7 +153,7 @@ export class Game {
   }
   gameOver() {
     this.gameCallback("gameOver", {
-      score: 777,
+      score: this.score,
     });
     this.isEndGame = true;
   }
