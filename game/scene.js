@@ -24,4 +24,10 @@ export class Scene {
       this.drawEntities.splice(index, 1);
     }
   }
+  updateDraw() {
+    this.clear();
+    this.drawEntities.forEach((entity) => {
+      entity.draw();
+    });
+  }
 }

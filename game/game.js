@@ -56,12 +56,6 @@ export class Game {
     this.palayer.draw();
     this.scene.addDrawEntity(this.palayer);
   }
-
-  updateDraw() {
-    this.scene.drawEntities.forEach((enemy) => {
-      enemy.draw();
-    });
-  }
   checkPlayerColision() {
     const isColision = this.enemiesControler.enemies.some((enemy) => {
       return enemy.checkPlayerColision(
@@ -102,7 +96,6 @@ export class Game {
     });
   }
   animate() {
-    this.scene.clear();
     this.enemiesControler.enemies.forEach((enemy) => {
       enemy.move();
     });
@@ -115,7 +108,7 @@ export class Game {
     if (isColision) {
       this.gameOver();
     }
-    this.updateDraw();
+    this.scene.updateDraw();
     if (this.isEndGame) {
       return false;
     }
@@ -125,30 +118,25 @@ export class Game {
   addUiController() {
     window.addEventListener("keydown", (event) => {
       if (event.code === "KeyW") {
-        this.scene.clear();
         this.palayer.moveUp();
-        this.updateDraw();
+        this.scene.updateDraw();
       }
       if (event.code === "KeyS") {
-        this.scene.clear();
         this.palayer.moveDown();
-        this.updateDraw();
+        this.scene.updateDraw();
       }
       if (event.code === "KeyA") {
-        this.scene.clear();
         this.palayer.moveLeft();
-        this.updateDraw();
+        this.scene.updateDraw();
       }
       if (event.code === "KeyD") {
-        this.scene.clear();
         this.palayer.moveRight();
-        this.updateDraw();
+        this.scene.updateDraw();
       }
       if (event.code === "Space") {
         event.preventDefault();
-        this.scene.clear();
         this.palayer.shoot();
-        this.updateDraw();
+        this.scene.updateDraw();
       }
     });
   }
