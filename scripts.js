@@ -1,7 +1,27 @@
-import { Game } from "./game.js";
+import { Game } from "./game/game.js";
 import { GameOverModal } from "./gameOverModal/gameOverModal.js";
 const canvas = document.getElementById("game-canvas");
-const game = new Game(canvas, window.innerWidth, window.innerHeight);
+
+const gameOverModal = new GameOverModal(gameOverModalCallback);
+
+const game = new Game(
+  canvas,
+  window.innerWidth,
+  window.innerHeight,
+  gameCallback
+);
 game.init();
-const gameOverModal = new GameOverModal();
-gameOverModal.show();
+
+function gameCallback(eventName, payload) {
+  if (eventName === "gameOver") {
+    gameOverModal.show();
+  }
+}
+function gameOverModalCallback(eventName, payload) {
+  if (eventName === "retry") {
+    game.retry();
+  }
+  if (eventName === "close") {
+    game.close();
+  }
+}

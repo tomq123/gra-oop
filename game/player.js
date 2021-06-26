@@ -1,12 +1,20 @@
 import { gameConfig } from "./gameConfig.js";
 
 export class Player {
-  constructor(ctx, x, y, radius, color = gameConfig.player.defaultColor) {
+  constructor(
+    playerCallback,
+    ctx,
+    x,
+    y,
+    radius,
+    color = gameConfig.player.defaultColor
+  ) {
     this.x = x;
     this.y = y;
     this.radius = radius;
     this.color = color;
     this.ctx = ctx;
+    this.playerCallback = playerCallback;
   }
   draw() {
     this.ctx.beginPath();
@@ -33,6 +41,9 @@ export class Player {
     this.x += gameConfig.player.speed;
   }
   shoot() {
-    console.log("shoot");
+    this.playerCallback("shoot", {
+      x: this.x,
+      y: this.y,
+    });
   }
 }
