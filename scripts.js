@@ -1,7 +1,17 @@
-import { Game } from "./game.js";
+import { Game } from "./game/game.js";
 import { GameOverModal } from "./gameOverModal/gameOverModal.js";
 const canvas = document.getElementById("game-canvas");
-const game = new Game(canvas, window.innerWidth, window.innerHeight);
-game.init();
 const gameOverModal = new GameOverModal();
-gameOverModal.show();
+
+const gameCallback = function (eventName, payload) {
+  if (eventName === "gameOver") {
+    gameOverModal.show();
+  }
+};
+const game = new Game(
+  canvas,
+  window.innerWidth,
+  window.innerHeight,
+  gameCallback
+);
+game.init();

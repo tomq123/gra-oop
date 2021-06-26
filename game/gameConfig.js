@@ -7,5 +7,12 @@ export const gameConfig = {
     speed: 1,
     defaultColor: "#8135cc",
     colisionColor: "#000",
+    destroyColor: "#e3e2bc",
+    destroyScore: 10,
+  },
+  projectile: {
+    speed: 20,
+    defaultColor: "#5acc49",
+    radius: 20,
   },
 };
