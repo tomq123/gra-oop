@@ -6,6 +6,7 @@ export class Enemy {
     x,
     y,
     radius,
+    speedUp,
     color = gameConfig.enmey.defaultColor
   ) {
     this.x = x;
@@ -19,6 +20,7 @@ export class Enemy {
     this.enemyCallback = enemyCallback;
     this.image = new Image();
     this.image.src = "../asets/plane.png";
+    this.speedUp = speedUp;
   }
   draw() {
     if (!this.isDestroyed) {
@@ -32,7 +34,7 @@ export class Enemy {
     }
   }
   move() {
-    this.y += gameConfig.enmey.speed;
+    this.y += gameConfig.enmey.speed + this.speedUp;
   }
   checkPlayerColision(playerX, playerY, palayerRadius) {
     if (this.isDestroyed) {

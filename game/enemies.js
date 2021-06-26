@@ -3,6 +3,7 @@ export class Enemies {
   constructor(scene) {
     this.scene = scene;
     this.enemies = [];
+    this.speedUp = 0;
   }
   init() {
     for (let i = 0; i < 5; i++) {
@@ -31,7 +32,8 @@ export class Enemies {
       (eventName, payload) => this.enemyCallback(eventName, payload),
       positionX,
       -100,
-      80
+      80,
+      this.speedUp
     );
     this.enemies.push(enemy);
     enemy.enemiesIndex =

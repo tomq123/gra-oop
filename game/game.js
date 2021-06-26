@@ -96,6 +96,7 @@ export class Game {
           this.gameCallback("setScore", {
             score: this.score,
           });
+          this.enemiesControler.speedUp += 0.1;
         }
       });
     });
