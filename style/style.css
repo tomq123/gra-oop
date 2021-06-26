@@ -1,0 +1,30 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 9;
+  transform: translate(-50%, -50%);
+  padding: 2rem;
+  background-color: antiquewhite;
+  text-align: center;
+  font-size: 4rem;
+}
+.modal.show {
+  display: block;
+}
+.modal_buttons {
+  display: flex;
+  margin-top: 2rem;
+  justify-content: space-between;
+}
+
+.modal_buttons button {
+  padding: 0.5rem 1rem;
+}
