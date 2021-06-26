@@ -3,26 +3,37 @@ import { Enemy } from "./enemy.js";
 import { Scene } from "./scene.js";
 import { Projectile } from "./projectile.js";
 import { gameConfig } from "./gameConfig.js";
+import { Enemies } from "./enemies.js";
 
 export class Game {
   constructor(canvas, width, height, gameCallback) {
     this.canvas = canvas;
     this.width = width;
     this.height = height;
-    this.enemies = [];
     this.palayer = {};
     this.gameCallback = gameCallback;
     this.projectiles = [];
     this.score = 0;
+    this.isEndGame = false;
   }
   init() {
     this.scene = new Scene(this.canvas, this.width, this.height);
     this.ctx = this.scene.ctx;
-    console.log("this.ctx", this.ctx);
+    this.enemiesControler = new Enemies(this.scene);
+    this.enemiesControler.init();
     this.createPlayer();
-    this.createEnemies();
     this.addUiController();
     this.animate();
+  }
+  retry() {
+    this.projectiles = [];
+    this.score = 0;
+    this.palayer = {};
+    this.isEndGame = false;
+    this.init();
+  }
+  close() {
+    this.scene.clear();
   }
   playerCallback(eventName, payload) {
     if (eventName === "shoot") {
@@ -45,32 +56,14 @@ export class Game {
     this.palayer.draw();
     this.scene.addDrawEntity(this.palayer);
   }
-  createEnemies() {
-    const enemy1 = new Enemy(this.ctx, 100, 100, 80);
-    const enemy2 = new Enemy(this.ctx, 300, 100, 80);
-    const enemy3 = new Enemy(this.ctx, 500, 100, 80);
-    const enemy31 = new Enemy(this.ctx, 500, -100, 80);
-    const enemy32 = new Enemy(this.ctx, 500, -200, 80);
-    const enemy4 = new Enemy(this.ctx, 700, 100, 80);
-    this.enemies = [enemy1, enemy2, enemy3, enemy4, enemy31, enemy32];
-    this.enemies.forEach((enemy) => {
-      this.scene.addDrawEntity(enemy);
-    });
-  }
-  drawEnemies() {
-    this.enemies.forEach((enemy) => {
-      enemy.draw();
-    });
-  }
+
   updateDraw() {
     this.scene.drawEntities.forEach((enemy) => {
       enemy.draw();
     });
-    // this.palayer.draw();
-    // this.drawEnemies();
   }
   checkPlayerColision() {
-    const isColision = this.enemies.some((enemy) => {
+    const isColision = this.enemiesControler.enemies.some((enemy) => {
       return enemy.checkPlayerColision(
         this.palayer.x,
         this.palayer.y,
@@ -79,8 +72,13 @@ export class Game {
     });
     return isColision;
   }
+  checkEnemiesOutsideScene() {
+    this.enemiesControler.enemies.forEach((enemy) => {
+      return enemy.checkOutsideScene(this.height);
+    });
+  }
   checkEnemiesAndProjectileColision() {
-    this.enemies.forEach((enemy) => {
+    this.enemiesControler.enemies.forEach((enemy) => {
       this.projectiles.forEach((projectile) => {
         const isColision = enemy.checkProjectileColision(
           projectile.x,
@@ -107,7 +105,7 @@ export class Game {
   }
   animate() {
     this.scene.clear();
-    this.enemies.forEach((enemy) => {
+    this.enemiesControler.enemies.forEach((enemy) => {
       enemy.move();
     });
     this.projectiles.forEach((projectile) => {
@@ -120,6 +118,10 @@ export class Game {
       this.gameOver();
     }
     this.updateDraw();
+    if (this.isEndGame) {
+      return false;
+    }
+    this.checkEnemiesOutsideScene();
     window.requestAnimationFrame(() => this.animate());
   }
   addUiController() {
@@ -156,5 +158,6 @@ export class Game {
     this.gameCallback("gameOver", {
       score: 777,
     });
+    this.isEndGame = true;
   }
 }

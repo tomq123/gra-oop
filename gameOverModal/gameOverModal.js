@@ -1,5 +1,6 @@
 export class GameOverModal {
-  constructor() {
+  constructor(gameOverModalCallback) {
+    this.gameOverModalCallback = gameOverModalCallback;
     this.gameOverModalEl = document.getElementById("game-over-modal");
     this.gameOverModalButtonCloseEl = document.getElementById(
       "game-over-button-close"
@@ -18,10 +19,12 @@ export class GameOverModal {
   close() {
     this.hide();
     console.log("close modal");
+    this.gameOverModalCallback("close");
   }
   retry() {
     this.hide();
     console.log("retry modal");
+    this.gameOverModalCallback("retry");
   }
   addListeners() {
     this.gameOverModalButtonCloseEl.addEventListener("click", () => {

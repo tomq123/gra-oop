@@ -22,9 +22,6 @@ export class Scene {
     );
     if (index > -1) {
       this.drawEntities.splice(index, 1);
-      console.log("index ok", index, sceneIndex);
-    } else {
-      console.log("index ko", index, sceneIndex);
     }
   }
 }

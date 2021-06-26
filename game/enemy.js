@@ -1,6 +1,13 @@
 import { gameConfig } from "./gameConfig.js";
 export class Enemy {
-  constructor(ctx, x, y, radius, color = gameConfig.enmey.defaultColor) {
+  constructor(
+    ctx,
+    enemyCallback,
+    x,
+    y,
+    radius,
+    color = gameConfig.enmey.defaultColor
+  ) {
     this.x = x;
     this.y = y;
     this.radius = radius;
@@ -8,13 +15,20 @@ export class Enemy {
     this.ctx = ctx;
     this.isDestroyed = false;
     this.sceneIndex = null;
+    this.enemiesIndex = null;
+    this.enemyCallback = enemyCallback;
+    this.image = new Image();
+    this.image.src = "../asets/plane.png";
   }
   draw() {
     if (!this.isDestroyed) {
-      this.ctx.beginPath();
-      this.ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-      this.ctx.fillStyle = this.color;
-      this.ctx.fill();
+      this.ctx.drawImage(
+        this.image,
+        this.x - this.radius,
+        this.y - this.radius,
+        this.radius * 2,
+        this.radius * 2
+      );
     }
   }
   move() {
@@ -42,7 +56,22 @@ export class Enemy {
       this.radius -= 10;
       if (this.radius < 30) {
         this.isDestroyed = true;
+        this.enemyCallback("isDestroyed", {
+          sceneIndex: this.sceneIndex,
+          enemiesIndex: this.enemiesIndex,
+        });
       }
+    }
+    return isColision;
+  }
+  checkOutsideScene(height) {
+    const isColision = this.y > height + this.radius;
+    if (isColision) {
+      this.color = "#f00";
+      this.enemyCallback("outsideScene", {
+        sceneIndex: this.sceneIndex,
+        enemiesIndex: this.enemiesIndex,
+      });
     }
     return isColision;
   }

@@ -1,7 +1,7 @@
 export const gameConfig = {
   player: {
     defaultColor: "#c95338",
-    speed: 10,
+    speed: 20,
   },
   enmey: {
     speed: 1,
