@@ -1,6 +1,12 @@
 import { gameConfig } from "./gameConfig.js";
 export class Projectile {
-  constructor(ctx, x, y, color = gameConfig.projectile.defaultColor) {
+  constructor(
+    ctx,
+    projectileCallback,
+    x,
+    y,
+    color = gameConfig.projectile.defaultColor
+  ) {
     this.x = x;
     this.y = y;
     this.radius = gameConfig.projectile.radius;
@@ -8,6 +14,7 @@ export class Projectile {
     this.ctx = ctx;
     this.projectilesIndex = null;
     this.sceneIndex = null;
+    this.projectileCallback = projectileCallback;
   }
   draw() {
     this.ctx.beginPath();
@@ -19,4 +26,14 @@ export class Projectile {
     this.y -= gameConfig.projectile.speed;
   }
   destroy() {}
+  checkOutsideScene() {
+    const isColision = this.y < 0;
+    if (isColision) {
+      this.projectileCallback("outsideScene", {
+        sceneIndex: this.sceneIndex,
+        projectilesIndex: this.projectilesIndex,
+      });
+    }
+    return isColision;
+  }
 }

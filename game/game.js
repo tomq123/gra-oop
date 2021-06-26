@@ -1,7 +1,6 @@
 import { Player } from "./player.js";
-import { Enemy } from "./enemy.js";
 import { Scene } from "./scene.js";
-import { Projectile } from "./projectile.js";
+import { Projectiles } from "./projectiles.js";
 import { gameConfig } from "./gameConfig.js";
 import { Enemies } from "./enemies.js";
 
@@ -21,6 +20,8 @@ export class Game {
     this.ctx = this.scene.ctx;
     this.enemiesControler = new Enemies(this.scene);
     this.enemiesControler.init();
+    this.projectilesControler = new Projectiles(this.scene);
+
     this.createPlayer();
     this.addUiController();
     this.animate();
@@ -37,11 +38,12 @@ export class Game {
   }
   playerCallback(eventName, payload) {
     if (eventName === "shoot") {
-      const projectile = new Projectile(this.ctx, payload.x, payload.y);
-      this.projectiles.push(projectile);
-      projectile.projectilesIndex =
-        this.projectiles.length + Date.now() + Math.round(1000 * Math.random());
-      this.scene.addDrawEntity(projectile);
+      this.projectilesControler.addProjectile(payload.x, payload.y);
+      // const projectile = new Projectile(this.ctx, payload.x, payload.y);
+      // this.projectiles.push(projectile);
+      // projectile.projectilesIndex =
+      //   this.projectiles.length + Date.now() + Math.round(1000 * Math.random());
+      // this.scene.addDrawEntity(projectile);
     }
   }
   createPlayer() {
@@ -70,22 +72,22 @@ export class Game {
     this.enemiesControler.enemies.forEach((enemy) => {
       return enemy.checkOutsideScene(this.height);
     });
+    this.projectilesControler.projectiles.forEach((projectile) => {
+      return projectile.checkOutsideScene();
+    });
   }
   checkEnemiesAndProjectileColision() {
     this.enemiesControler.enemies.forEach((enemy) => {
-      this.projectiles.forEach((projectile) => {
+      this.projectilesControler.projectiles.forEach((projectile) => {
         const isColision = enemy.checkProjectileColision(
           projectile.x,
           projectile.y
         );
         if (isColision) {
           this.scene.removeDrawEntity(projectile.sceneIndex);
-          const index = this.projectiles.findIndex(
-            (el) => el.projectilesIndex === projectile.projectilesIndex
+          this.projectilesControler.removeProjectile(
+            projectile.projectilesIndex
           );
-          if (index > -1) {
-            this.projectiles.splice(index, 1);
-          }
           this.score += gameConfig.enmey.destroyScore;
           this.gameCallback("setScore", {
             score: this.score,
@@ -99,7 +101,7 @@ export class Game {
     this.enemiesControler.enemies.forEach((enemy) => {
       enemy.move();
     });
-    this.projectiles.forEach((projectile) => {
+    this.projectilesControler.projectiles.forEach((projectile) => {
       projectile.update();
     });
     this.checkEnemiesAndProjectileColision();
